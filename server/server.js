@@ -10,16 +10,23 @@ const users = [
     {username: 'admin', password: 'admin'},
 ];
 
-/**
- * 404 handler
- */
+if (process.env.NODE_ENV === 'production') {
+  // statically serve everything in the build folder on the route '/build'
+  app.use('/build', express.static(path.join(__dirname, '../build')));
+  // serve index.html on the route '/'
+  app.get('/', (req, res) => {
+    return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+  });
+
+}
+
+//404 handler
 app.use('*', (req,res) => {
     res.status(404).send('Not Found');
   });
   
-  /**
-   * Global error handler
-   */
+  
+  //Global error handler
   app.use((err, req, res, next) => {
     console.log(err);
     res.status(500).send({ error: err });
