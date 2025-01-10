@@ -1,0 +1,40 @@
+{
+    "users": [
+        {
+            "id": 0,
+            "username": "TEST_USER",
+            "password": "password123",
+            "name": "TEST",
+            "email": "TEST@example.com",
+            "created_at": "2025-01-01T12:00:00Z"
+        },
+        {
+            "id": 1,
+            "username": "JeremyDalton",
+            "password": "Brock123",
+            "name": "Jeremy",
+            "email": "jeremy@example.com",
+            "created_at": "2025-01-02T15:30:00Z"
+        }
+    ],
+    "messages": [
+        {
+            "id": 0,
+            "sender_id": 0,
+            "content": "What's the word?",
+            "timestamp": "2025-01-03T10:00:00Z"
+        },
+        {
+            "id": 1,
+            "sender_id": 1,
+            "content": "I'm good, how goes it?",
+            "timestamp": "2025-01-03T10:05:00Z"
+        },
+        {
+            "id": 2,
+            "sender_id": 1,
+            "content": "I'm talking to myself!",
+            "timestamp": "2025-01-03T10:10:00Z"
+        }
+    ]
+}

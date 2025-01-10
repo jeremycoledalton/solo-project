@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import './stylesheets/style.css';
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -19,34 +21,26 @@ class App extends Component {
                 [name]: value
             }
         }));
+        console.log (this.state)
     };
 
     render() {
         const { formData } = this.state;
 
+        
+
         return (
             <div>
-                <form className="login-form" action="/login" method="POST">
-                    <h2>Login</h2>
+                <form id="signUpForm" className="login-form" action="/signup" method="POST">
+                    <h2>Sign Up</h2>
+
                     <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={formData.username}
-                        onChange={this.handleChange}
-                        required
-                    />
+                    <input id="username" name="username" value={formData.username} onChange={this.handleChange} required/>
 
                     <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={this.handleChange}
-                        required
-                    />
+                    <input id="password" name="password" value={formData.password} onChange={this.handleChange} required />
+                    
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         );

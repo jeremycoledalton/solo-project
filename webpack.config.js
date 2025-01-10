@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -8,6 +9,7 @@ module.exports = {
     output: {
       filename: "bundle.js",
       path: path.resolve(__dirname, "build"),
+      publicPath: '/',
     },
     module: {
       rules: [
@@ -21,6 +23,11 @@ module.exports = {
             },
           },
         },
+        {
+          test: /\.css/,
+          exclude: /node_modules/,
+          use: ['style-loader', 'css-loader'],
+        }
       ],
     },
     plugins: [new HtmlWebpackPlugin({
