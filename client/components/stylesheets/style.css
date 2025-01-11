@@ -2,6 +2,11 @@ body {
     background-color: rgb(185, 185, 185);
 }
 
+#title{
+    width: auto;
+    text-align: center;
+}
+
 #root {
     border: 2px solid red;
     border-radius: 25px;

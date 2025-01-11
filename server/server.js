@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 
 const MOCK_DB = path.join(__dirname, 'mock-db.json')
 const PORT = 3000;
