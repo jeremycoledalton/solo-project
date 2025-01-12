@@ -2,13 +2,11 @@ body {
     background-color: rgb(185, 185, 185);
 }
 
-#wholeApp {
-    background-color: rgb(141, 146, 150);
-}
-
-#title{
-    width: auto;
-    text-align: center;
+#appContainer {
+    border: 2px solid teal;
+    border-radius: 50px;
+    padding: 0.5em;
+    margin: 0.5em;
 }
 
 #root {
@@ -18,14 +16,14 @@ body {
     margin: 1em;
   }
 
-#signUpForm {
+#authDiv {
     border: 2px solid black;
     border-radius: 25px;
     padding: 1em;
     margin: 1em;
 }
 
-#bottomNav {
+nav {
     border: 2px solid black;
     border-radius: 25px;
     padding: 1em;

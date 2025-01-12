@@ -9,8 +9,10 @@ const PORT = 3000;
 
 //cookie related imports
 const cookieParser = require('cookie-parser');
-const cookieController = require('./controllers/cookieController.js')
+const cookieController = require('./controllers/cookieController.js');
 
+//user related imports
+const userController = require('./controllers/userController.js');
 
 //Mongoose imports and URI connection
 const mongoose = require('mongoose');
@@ -38,10 +40,23 @@ if (process.env.NODE_ENV === 'production') {
 
 }
 
-app.post('/signup', (req, res) => {
-  console.log("hello world");
-  console.log(req.body);
-  return res.status(200).sendFile(path.join(__dirname, 'index.html'));
+app.get('/home', (req, res) => {
+  console.log('home was clicked');
+  return res.status(200);
+})
+app.get('/login', (req, res) => {
+  console.log('login was clicked')
+  return res.status(200);
+})
+app.get('/signup', (req, res) => {
+  console.log('signup was clicked')
+  return res.status(200);
+})
+
+app.post('/signup',  (req, res) => {
+
+  console.log("Signup was submitted");
+  return res.status(200);
 
 
 });

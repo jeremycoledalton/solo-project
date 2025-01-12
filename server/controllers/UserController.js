@@ -1,6 +1,6 @@
 const User = require ('../models/UserModel');
 
-const UserController = {
+const userController = {
 
 
     createUser(req, res) {
@@ -95,4 +95,4 @@ const UserController = {
 
 };
 
-module.exports = UserController;
+module.exports = userController;
