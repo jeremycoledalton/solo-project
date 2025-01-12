@@ -1,0 +1,33 @@
+body {
+    background-color: rgb(185, 185, 185);
+}
+
+#wholeApp {
+    background-color: rgb(141, 146, 150);
+}
+
+#title{
+    width: auto;
+    text-align: center;
+}
+
+#root {
+    border: 2px solid red;
+    border-radius: 25px;
+    padding: 1em;
+    margin: 1em;
+  }
+
+#signUpForm {
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 1em;
+    margin: 1em;
+}
+
+#bottomNav {
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 1em;
+    margin: 1em;
+}
