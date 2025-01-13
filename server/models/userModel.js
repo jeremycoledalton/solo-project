@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     //for now we want userName, password, admin(boolen)
 
     {
-        userName: {
+        username: {
             type: String,
             required: true,
             unique: true

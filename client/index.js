@@ -1,14 +1,15 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './stylesheets/style.css';
 
+const container = document.getElementById('root')
+const root = createRoot(container)
 
 console.log("Serving index.js")
 
-render(
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

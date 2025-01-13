@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Home = () => (
+const LandingPage = () => (
   <div>
-    <h1>Welcome to the Landing Page</h1>
-    <p>This is the home page of your app.</p>
+    <h1>Spill the Tea, Sis!</h1>
+    <p>How are you feeling Gossip Girl?</p>
   </div>
 );
 
-export default Home;
+export default LandingPage;

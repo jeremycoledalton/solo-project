@@ -1,44 +1,37 @@
 import React, { Component } from 'react';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/landingPage.jsx';
-import AuthPage from './components/authPage.jsx';
-import Navigation from './components/navBar.jsx';
+import LandingPage from './components/LandingPage.jsx';
+import AuthPage from './components/AuthPage.jsx';
+import NavBar from './components/NavBar.jsx';
+import Dashboard from './components/Dasboard.jsx';
+
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            formData: {
-                username: '',
-                password: ''
-            }
+            user: null,
         };
     }
 
-    handleChange = (event) => {
-        const { name, value } = event.target;
-        this.setState((prevState) => ({
-            formData: {
-                ...prevState.formData,
-                [name]: value
-            }
-        }));
-        console.log (this.state)
-    };
+    handleLogin = (userData) => {
+        this.setState({user: userData});
+    }
 
     render() {
-        const { formData } = this.state;
+        const { user } = this.state;
 
         
 
         return (
             <Router>
-                    <Navigation />
+                    <NavBar user={user} />
                  <div id="authDiv">
                     <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/auth/:type" element={<AuthPage />} /> {/* Dynamically handles /login and /signup */}
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/auth/:type" element={<AuthPage onAuthSuccess={this.handleAuthSuccess}/>} /> 
+                        <Route path="/dashboard" element={<Dashboard user={user} />} />
                     </Routes>
                 </div>
         </Router>

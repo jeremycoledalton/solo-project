@@ -1,6 +1,3 @@
-//is fs needed?
-const fs = require('fs');
-
 //Express imports and start
 const path = require('path');
 const express = require('express');
@@ -22,7 +19,12 @@ const mongoURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost/us
 const MOCK_DB = path.join(__dirname, 'mock-db.json')
 
 
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI);
+
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -41,24 +43,31 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/home', (req, res) => {
-  console.log('home was clicked');
   return res.status(200);
 })
 app.get('/login', (req, res) => {
-  console.log('login was clicked')
   return res.status(200);
 })
 app.get('/signup', (req, res) => {
-  console.log('signup was clicked')
   return res.status(200);
 })
 
-app.post('/signup',  (req, res) => {
+app.get('/allUsers', userController.getAllUsers, (req, res) => {
+  console.log("Users: ", res.locals.users);
+  return res.status(200);
+});
+
+app.post('/signup', userController.createUser, (req, res) => {
 
   console.log("Signup was submitted");
-  return res.status(200);
+  es.status(200).json({ message: 'Signup successful', user: res.locals.savedUser });
 
 
+});
+
+app.delete('/deleteUser', userController.deleteUser, (req, res) => {
+  console.log ('User was Deleted');
+  return res.status(200).json({ log: 'User deleted successfully' });
 });
 
 //404 handler
