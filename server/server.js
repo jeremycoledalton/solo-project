@@ -1,4 +1,5 @@
 //Express imports and start
+const cors = require('cors');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -18,12 +19,15 @@ const mongoURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost/us
 //is this needed? are we still using the mock db?
 const MOCK_DB = path.join(__dirname, 'mock-db.json')
 
+app.use(cors());
 
 mongoose.connect(mongoURI);
 
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 });
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -60,10 +64,16 @@ app.get('/allUsers', userController.getAllUsers, (req, res) => {
 app.post('/signup', userController.createUser, (req, res) => {
 
   console.log("Signup was submitted");
-  es.status(200).json({ message: 'Signup successful', user: res.locals.savedUser });
+  res.status(200).json({ message: 'Signup successful', user: res.locals.savedUser });
 
 
 });
+
+app.post('/login', async (req, res) => {
+  //logic to go here for the login
+  
+
+})
 
 app.delete('/deleteUser', userController.deleteUser, (req, res) => {
   console.log ('User was Deleted');

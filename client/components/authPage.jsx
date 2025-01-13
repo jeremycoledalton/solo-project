@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 const AuthForm = ({ title, onSubmit }) => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({...prevState, [name]: value}));
   };

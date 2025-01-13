@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage.jsx';
 import AuthPage from './components/AuthPage.jsx';
 import NavBar from './components/NavBar.jsx';
-import Dashboard from './components/Dasboard.jsx';
+import Dashboard from './components/Dashboard.jsx';
 
 
 class App extends Component {
