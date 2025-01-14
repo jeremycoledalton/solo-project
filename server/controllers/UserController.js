@@ -135,9 +135,9 @@ const userController = {
         User.find({})
         .then(users => {
             res.locals.users=users;
-            next();
+            return next();
         }).catch(error => {
-        res.status(500).json({ message: 'Error fetching users', error });
+            res.status(500).json({ message: 'Error fetching users', error });
         });
     }
 

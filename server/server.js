@@ -63,6 +63,11 @@ app.get('/allUsers', userController.getAllUsers, (req, res) => {
   console.log("Users: ", res.locals.users);
   return res.status(200);
 });
+app.get('/allSessions', sessionController.getAllSessions, (req, res) => {
+  console.log("Sessions: ", res.locals.sessions);
+  return res.status(200);
+});
+
 
 app.post('/signup', userController.createUser, (req, res) => {
 
