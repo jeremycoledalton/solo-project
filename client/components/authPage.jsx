@@ -44,6 +44,9 @@ const AuthForm = ({ title, onSubmit }) => {
 };
 
 const AuthPage = ({ onAuthSuccess }) => {
+
+  console.log('onAuthSuccess prop:', onAuthSuccess);
+
   const { type } = useParams();
   const navigate = useNavigate();
 
@@ -56,18 +59,25 @@ const AuthPage = ({ onAuthSuccess }) => {
 
   const handleAuth = async (formData) => {
     try {
+      console.log('Submitting form data:', formData); 
+
       const response = await fetch(`http://localhost:3000${formAction}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        onAuthSuccess(data); // Pass user data to the parent component (App)
-        navigate('/dashboard'); // Redirect to the dashboard
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Authentication failed:', errorData);
+        throw new Error(errorData.message || 'Authentication failed');
+
       } else {
-        console.error('Authentication failed.');
+        
+        const data = await response.json();
+        console.log('Authentication succeeded:', data); 
+        onAuthSuccess(data.user); 
+        navigate('/dashboard'); 
       }
     } catch (err) {
       console.error('Error during authentication:', err);

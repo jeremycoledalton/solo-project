@@ -1,18 +1,21 @@
 const User = require ('../models/userModel');
+const bcrypt = require('bcryptjs'); //required for varifyUser function to hash the password
 
 const userController = {
 
 
+    
+    
     createUser(req, res, next) {
         const { username, password } = req.body;
-
+        
         const admin = false;
-
+        
         const user = new User ({ username, password, admin });
         user.save().then((user) => {
             console.log(`User ${user.username} added`);
             res.locals.user = user;
-            next();
+            return next();
         }).catch((err) => {
             console.log('Error saving user', err);
             res.status(400).json({
@@ -20,11 +23,41 @@ const userController = {
                 log: 'Failed to save user to database'
             });
         });
+        
+    },
+    
+    verifyUser(req, res, next) {
+      const {username, password} = req.body;
+      User.findOne({username: username})
+      .then ((user) => {
+        if (!user) {
+            return res.status(401).json({ log: 'User not found' });
+        } 
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                console.log('Error comparing passwords:', err);
+                return res.status(500).json({ log: 'Error verifying password', err: err })
+            }
+            if (!isMatch) {
+                return res.status(401).json({ log: 'Invalid credentials' });
+            } else {
+                console.log('User verified sucessfully');
+                res.locals.user = user;
+                return next();
+            }
+
+        });
+        
+      }).catch((err) => {
+        console.log('Error verifying user:', err);
+        res.status(500).json({ 
+            err: err, 
+            log: 'Internal server error' });
+        });
 
     },
-
-
-
+    
+    
     updateUser(req, res) {
         const { searchUsername } = req.params;
         const { username, password, admin } = req.body;

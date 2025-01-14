@@ -12,6 +12,9 @@ const cookieController = require('./controllers/cookieController.js');
 //user related imports
 const userController = require('./controllers/userController.js');
 
+//session related imports
+const sessionController = require('./controllers/sessionController.js');
+
 //Mongoose imports and URI connection
 const mongoose = require('mongoose');
 const mongoURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost/user-database-production' : 'mongodb://localhost/user-database-development';
@@ -38,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
   // statically serve everything in the build folder on the route '/build'
   app.use('/build', express.static(path.join(__dirname, '../build')));
   // serve index.html on the route '/'
-  app.get('/', cookieController.setSSID, (req, res) => {
+  app.get('/', (req, res) => {
 
     
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
@@ -69,8 +72,9 @@ app.post('/signup', userController.createUser, (req, res) => {
 
 });
 
-app.post('/login', async (req, res) => {
-  //logic to go here for the login
+app.post('/login', userController.verifyUser, sessionController.startSession, (req, res) => {
+  console.log ('You have sucessfully logged in');
+  return res.status(200).json({ log: 'User sucessfully logged in', user: res.locals.user });
   
 
 })
@@ -89,7 +93,10 @@ app.use('*', (req,res) => {
   //Global error handler
   app.use((err, req, res, next) => {
     console.log(err);
-    res.status(500).send({ error: err });
+    if (res.headersSent) {
+      return next(err); // Pass to default Express error handler
+    }
+    res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
   });
   
   app.listen(PORT, ()=>{ console.log(`Listening on port ${PORT}...`); });
