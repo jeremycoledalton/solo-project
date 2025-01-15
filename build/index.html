@@ -15,7 +15,13 @@
         <div id="adminTools">
             <p>--- Admin Tools ---</p>
             <a href="./allUsers">All Users </a> || 
-            <a href="./allSessions">All Sessions </a>
+            <a href="./allSessions">All Sessions </a> ||
+            <a href="./">Careers </a>
+            <form action="/deleteUser" method="GET">
+                <label htmlFor="username">Delete User: </label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required />
+                <button type="submit">Delete</button>
+            </form>
         </div>
     </body>
     

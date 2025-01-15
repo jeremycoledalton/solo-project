@@ -6,7 +6,7 @@ const Dashboard = ({ user }) => {
 
   return (
     <div>
-      <h1>Welcome, {user.username}!</h1>
+      <h1>So you agree, {user.username}? </h1>
       <p>Your role: {user.admin ? 'Admin' : 'User'}</p>
     </div>
   );

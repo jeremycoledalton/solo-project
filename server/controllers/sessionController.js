@@ -29,12 +29,25 @@ const sessionController = {
       if(err){
         return next({
             log: 'error occured in sessionController.startSession',
-            message: {
-            err: { err: 'an error occured in sessionController.startSession Check server logs for more details.'},
-            },
+            message: { err: 'an error occured in sessionController.startSession Check server logs for more details.'},
             status: 500,
       })};
       console.log('Session started for user: ', _id);
+      return next();
+    });
+  },
+
+  endSession (req, res, next) {
+    Session.deleteOne({ CookieID: req.cookies.ssid}, (err) => {
+      if (err) {
+        return next({
+          log: 'error occured in sessionController.startSession',
+          message: { err: 'an error occured in sessionController.startSession Check server logs for more details.'},
+          status: 500,
+        });
+      };
+      res.clearCookie('ssid');
+      console.log('Session ended');
       return next();
     });
   },

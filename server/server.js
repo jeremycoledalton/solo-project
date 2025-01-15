@@ -49,20 +49,13 @@ if (process.env.NODE_ENV === 'production') {
 
 }
 
-app.get('/home', (req, res) => {
-  return res.status(200);
-})
-app.get('/login', (req, res) => {
-  return res.status(200);
-})
-app.get('/signup', (req, res) => {
-  return res.status(200);
-})
+
 
 app.get('/allUsers', userController.getAllUsers, (req, res) => {
   console.log("Users: ", res.locals.users);
   return res.status(200);
 });
+
 app.get('/allSessions', sessionController.getAllSessions, (req, res) => {
   console.log("Sessions: ", res.locals.sessions);
   return res.status(200);
@@ -70,23 +63,24 @@ app.get('/allSessions', sessionController.getAllSessions, (req, res) => {
 
 
 app.post('/signup', userController.createUser, (req, res) => {
-
   console.log("Signup was submitted");
   res.status(200).json({ message: 'Signup successful', user: res.locals.savedUser });
-
-
 });
 
 app.post('/login', userController.verifyUser, sessionController.startSession, (req, res) => {
   console.log ('You have sucessfully logged in');
   return res.status(200).json({ log: 'User sucessfully logged in', user: res.locals.user });
-  
+});
 
-})
+app.post('/logout', sessionController.endSession, (req, res) => {
+  return res.status(200).json({ message: 'User logged out successfully' });
+});
 
-app.delete('/deleteUser', userController.deleteUser, (req, res) => {
-  console.log ('User was Deleted');
-  return res.status(200).json({ log: 'User deleted successfully' });
+
+//invoke this with Postman to delete specific users
+app.get('/deleteUser', userController.deleteUser, (req, res) => {
+  console.log ('User was deleted');
+  return res.status(200);
 });
 
 //404 handler

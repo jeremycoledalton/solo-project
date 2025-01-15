@@ -1,52 +1,61 @@
-import React, { Component } from 'react';
-
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+//React Components
+import NavBar from './components/NavBar.jsx';
 import LandingPage from './components/LandingPage.jsx';
 import AuthPage from './components/AuthPage.jsx';
-import NavBar from './components/NavBar.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import GameScreen from './components/GameScreen.jsx';
+
+const ProtectedRoute = ({ user, children }) => {
+    return user ? children : <Navigate to="/" />
+;}
 
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-        };
-    }
+const App = () => {
+    const [user, setUser] = useState(null);
 
-    handleLogin = (userData) => {
-        this.setState({user: userData});
-    }
+    const handleLogin = (userData) => {
+        setUser(userData);
+      };
 
-    render() {
-        const { user } = this.state;
+      const handleLogout = () => {
+        fetch('/logout', {
+            method: 'POST',
+            credentials: 'include',
+        }).then ((response) => {
+            if (response.ok) {
+                setUser(null);
+                console.log('User logged out');
+            } else {
+                console.log('failed to log out')
+            }
+        }).catch((err) => {
+            console.log ('Error during logout:', err);
+        })
+      };
 
-        const ProtectedRoute = ({ user, children }) => {
-            return user? children : <Navigate to="/auth/login" />;
-        }
-
-        
-
-        return (
-            <Router>
-                    <NavBar user={user} />
-                 <div id="authDiv">
-                    <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/auth/:type" element={<AuthPage onAuthSuccess={this.handleLogin} />} />
-                        {/*Protected Route*/}
-                        <Route path="/dashboard" element={
-                                                    <ProtectedRoute user={user}> 
-                                                        <Dashboard user={user} />
-                                                    </ProtectedRoute>
-                                                }
-                        />
-                    </Routes>
-                </div>
+    return (
+        <Router>
+                <NavBar user={user} onLogout={handleLogout} />
+            <div id="authDiv">
+                <Routes>
+                    <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+                    <Route path="/auth/:type" element={<AuthPage onAuthSuccess={handleLogin} />} />
+                    {/*Protected Route*/}
+                    <Route path="/dashboard" element={
+                                                <ProtectedRoute user={user}> 
+                                                    <Dashboard user={user} />
+                                                    <GameScreen />
+                                                </ProtectedRoute>
+                                            }
+                    />
+                </Routes>
+            </div>
         </Router>
-        );
-    }
+    );
 }
+
 
 export default App;

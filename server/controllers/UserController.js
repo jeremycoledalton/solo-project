@@ -106,10 +106,7 @@ const userController = {
 
 
     deleteUser(req, res, next) {
-       
         const { username } = req.query
-
-
         User.deleteOne({ username: username})
         .then((user) => {
             if (user.deletedCount === 0) {
@@ -119,8 +116,7 @@ const userController = {
                     log: 'No user found. Failed to delete'
                 });
             } else if (user.deletedCount === 1) {
-                console.log('User deleted');
-                next();
+                return next();
             };
         }).catch((err) => {
             console.log('Error finding user', err);
