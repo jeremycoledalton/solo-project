@@ -12,11 +12,10 @@
             <script src="/build/bundle.js"></script>
         </section>
 
-        <div id="adminTools">
+        <div id="adminDiv">
             <p>--- Admin Tools ---</p>
-            <a href="./allUsers">All Users </a> || 
-            <a href="./allSessions">All Sessions </a> ||
-            <a href="./">Careers </a>
+            <a id="adminTools" href="./allUsers">All Users </a>
+            <a id="adminTools" href="./allSessions">All Sessions </a>
             <form action="./deleteUser" method="GET">
                 <label htmlFor="username">Delete User: </label>
                 <input type="text" id="username" name="username" placeholder="Enter username" required />
