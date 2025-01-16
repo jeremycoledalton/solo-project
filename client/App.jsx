@@ -6,7 +6,9 @@ import NavBar from './components/NavBar.jsx';
 import LandingPage from './components/LandingPage.jsx';
 import AuthPage from './components/AuthPage.jsx';
 import Dashboard from './components/Dashboard.jsx';
-import GameScreen from './components/GameScreen.jsx';
+import ThoughtFeed from './components/ThoughtFeed.jsx';
+import ThoughtForm from './components/ThoughtForm.jsx';
+
 
 const ProtectedRoute = ({ user, children }) => {
     return user ? children : <Navigate to="/" />
@@ -39,6 +41,8 @@ const App = () => {
     return (
         <Router>
                 <NavBar user={user} onLogout={handleLogout} />
+                <ThoughtForm />
+                <ThoughtFeed />
             <div id="authDiv">
                 <Routes>
                     <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
@@ -47,7 +51,6 @@ const App = () => {
                     <Route path="/dashboard" element={
                                                 <ProtectedRoute user={user}> 
                                                     <Dashboard user={user} />
-                                                    <GameScreen />
                                                 </ProtectedRoute>
                                             }
                     />

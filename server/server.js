@@ -15,6 +15,9 @@ const userController = require('./controllers/userController.js');
 //session related imports
 const sessionController = require('./controllers/sessionController.js');
 
+//thought related imports
+const thoughtController = require('./controllers/thoughtController.js');
+
 //Mongoose imports and URI connection
 const mongoose = require('mongoose');
 const mongoURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost/user-database-production' : 'mongodb://localhost/user-database-development';
@@ -58,6 +61,11 @@ app.get('/allUsers', userController.getAllUsers, (req, res) => {
 
 app.get('/allSessions', sessionController.getAllSessions, (req, res) => {
   console.log("Sessions: ", res.locals.sessions);
+  return res.status(200);
+});
+
+app.get('/allThoughts', thoughtController.getAllThoughts, (req, res) => {
+  console.log("Thoughts: ", res.locals.thoughts);
   return res.status(200);
 });
 
