@@ -42,8 +42,6 @@ const App = () => {
     return (
         <Router>
                 <NavBar user={user} onLogout={handleLogout} />
-                <ThoughtFeed />
-                <ThoughtForm />
             <div id="authDiv">
                 <Routes>
                     <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
