@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const bcrypt = require('bcryptjs');
+
+//resetting salt work factor can be done here
 const SALT_WORK_FACTOR = 4;
 
 
@@ -23,14 +25,27 @@ const userSchema = new mongoose.Schema(
         }
     }
 )
-userSchema.pre('save', function(next){
-    bcrypt.hash(this.password, SALT_WORK_FACTOR, (err, hash) => {
-        if(err) {
-            return next(err)
-        };
-        this.password = hash;
+userSchema.pre('save', async function(next) {
+    try {
+        if (!this.isModified('password')) {
+            return next();
+        }
+        const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+        this.password = await bcrypt.hash(this.password, salt);
         return next();
-    })
-})
+    } catch (err) {
+        return next (err);
+    }
+});
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    try {
+      return await bcrypt.compare(candidatePassword, this.password);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = { User, SALT_WORK_FACTOR};

@@ -1,141 +1,142 @@
-const User = require ('../models/userModel');
+const { User } = require ('../models/userModel');
 const bcrypt = require('bcryptjs'); //required for varifyUser function to hash the password
 
 const userController = {
 
+    async createUser(req, res, next) {
+        try {
+            const { username, password } = req.body;
 
-    
-    
-    createUser(req, res, next) {
-        const { username, password } = req.body;
-        
-        const admin = false;
-        
-        const user = new User ({ username, password, admin });
-        user.save().then((user) => {
+            if (!username || !password) {
+                return res.status(400).json({ log: 'Username and Password are required' });
+            }
+
+            const admin = false;
+            const user = await User.create ({username, password, admin});
             console.log(`User ${user.username} added`);
             res.locals.user = user;
             return next();
-        }).catch((err) => {
+
+        } catch (err){
             console.log('Error saving user', err);
             res.status(400).json({
                 err: err,
                 log: 'Failed to save user to database'
             });
-        });
-        
+        };
     },
     
-    verifyUser(req, res, next) {
-      const {username, password} = req.body;
-      User.findOne({username: username})
-      .then ((user) => {
-        if (!user) {
-            return res.status(401).json({ log: 'User not found' });
-        } 
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-                console.log('Error comparing passwords:', err);
-                return res.status(500).json({ log: 'Error verifying password', err: err })
-            }
+    async verifyUser(req, res, next) {
+        try {
+            const {username, password} = req.body;
+            const user = await User.findOne({username: username});
+            if (!user) {
+                return res.status(401).json({ log: 'User not found' });
+            };
+            const isMatch = await user.comparePassword(password);
             if (!isMatch) {
                 return res.status(401).json({ log: 'Invalid credentials' });
-            } else {
-                console.log('User verified sucessfully');
-                res.locals.user = user;
-                return next();
-            }
+            };
 
-        });
-        
-      }).catch((err) => {
-        console.log('Error verifying user:', err);
-        res.status(500).json({ 
-            err: err, 
-            log: 'Internal server error' });
-        });
-
+            console.log('User verified sucessfully');
+            res.locals.user = user;
+            return next();
+        } catch (err) {
+            console.error('Error verifying user:', err);
+            return res.status(500).json({
+                err,
+                log: 'Internal server error during user verification',
+            });
+        };
     },
     
     
-    updateUser(req, res) {
-        const { searchUsername } = req.params;
-        const { username, password, admin } = req.body;
+    async updateUser(req, res) {
+        try {
+            const { searchUsername } = req.params;
+            const { username, password, admin } = req.body;
 
-        User.findOne({ username: searchUsername})
-        .then ((user) => {
+            const user = await User.findOne({ username: searchUsername})
+
             if (!user) {
-                return res.status(400).json({ log: 'Failed to find User, null' });
+                return res.status(404).json({ log: 'User not Found' });
             };
             if (username) user.username = username;
-            if (password) user.password = password;
-            if (admin) user.admin = admin;
+            if (password) user.password = password;//Will this trigger pre('save') middleware?
+            if (typeof admin !== 'undefined') user.admin = admin;
 
-            user.save().then((updatedUser) => {
-                console.log ('User has been updated');
-                res.status(200).send(updatedUser);
-            })
-        }).catch((err) => {
+            const updatedUser = await user.save();
+            console.log ('User has been updated');
+            return res.status(200).json(updatedUser);
+   
+        } catch (err) {
             console.log('Error updating user:', err);
-        res.status(400).json({ 
-            err: err, 
-            log: 'No user found to update' });
-        });
-    },
-
-
-
-    getUser (req, res) {
-        const { username } = req.params;
-        User.findOne({ username: username})
-        .then((foundUser) => {
-            if (!foundUser) {
-                return res.status(400).json({ log: 'Failed to find User, null' });
-            };
-            console.log (`User ${foundUser.username} found`);
-            res.status(200).send(foundUser);
-        }).catch((err) => {
-            console.log('Error finding user', err);
-            res.status(400).json({
-                err:err,
-                log: 'Failed to fetch user from the database'
+            return res.status(400).json({ 
+                err: err, 
+                log: 'No user found to update' 
             });
-        })
+        };
+
     },
 
 
 
-    deleteUser(req, res, next) {
-        const { username } = req.query
-        User.deleteOne({ username: username})
-        .then((user) => {
-            if (user.deletedCount === 0) {
+    async getUser(req, res) {
+        try {
+          const { username } = req.params;
+    
+          const user = await User.findOne({ username });
+          if (!user) {
+            return res.status(404).json({ log: 'User not found' });
+          }
+    
+          console.log(`User ${user.username} found`);
+          return res.status(200).json(user);
+        } catch (err) {
+          console.error('Error finding user:', err);
+          return res.status(500).json({
+            err,
+            log: 'Failed to fetch user from the database',
+          });
+        }
+    },
+
+
+
+    async deleteUser(req, res, next) {
+        try {
+            const { username } = req.query;
+
+            const result = await User.deleteOne({ username });
+            if (result.deletedCount === 0) {
                 console.log('No user found');
-                return res.status(400).json({ 
-                    err: err,
-                    log: 'No user found. Failed to delete'
-                });
-            } else if (user.deletedCount === 1) {
-                return next();
-            };
-        }).catch((err) => {
-            console.log('Error finding user', err);
-            res.status(400).json({
-                err: err,
-                log: 'No user found to delete'
+                return res.status(404).json({ log: 'User not found. Failed to delete.' });
+            }
+
+            console.log(`User ${username} deleted`);
+            return next();
+        } catch (err) {
+            console.error('Error deleting user:', err);
+            return res.status(500).json({
+            err,
+            log: 'Failed to delete user from the database',
             });
-        });
+        }
     },
 
-    getAllUsers (req, res, next){
-        User.find({})
-        .then(users => {
-            res.locals.users=users;
+    async getAllUsers(req, res, next) {
+        try {
+            const users = await User.find({});
+            res.locals.users = users;
             return next();
-        }).catch(error => {
-            res.status(500).json({ message: 'Error fetching users', error });
-        });
-    }
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            return res.status(500).json({
+            log: 'Failed to fetch users',
+            error: err,
+            });
+        }
+    },
 
 };
 
