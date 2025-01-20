@@ -87,7 +87,7 @@ const userController = {
     
           const user = await User.findOne({ username });
           if (!user) {
-            return res.status(404).json({ log: 'User not found' });
+            return res.status(404).json({ log: 'No Users found' });
           }
     
           console.log(`User ${user.username} found`);
@@ -127,12 +127,16 @@ const userController = {
     async getAllUsers(req, res, next) {
         try {
             const users = await User.find({});
+
+            if (!users) {
+                return res.status(404).json({ log: 'Users not found' });
+              }
             res.locals.users = users;
             return next();
         } catch (err) {
             console.error('Error fetching users:', err);
             return res.status(500).json({
-            log: 'Failed to fetch users',
+            log: 'error occurred in userController.getAllUsers',
             error: err,
             });
         }

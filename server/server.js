@@ -2,6 +2,7 @@
 const cors = require('cors');
 const path = require('path');
 const express = require('express');
+
 const app = express();
 const PORT = 3000;
 
@@ -19,19 +20,19 @@ const sessionController = require('./controllers/sessionController.js');
 const thoughtController = require('./controllers/thoughtController.js');
 
 //Mongoose imports and URI connection
-const mongoose = require('mongoose');
-const mongoURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost/user-database-production' : 'mongodb://localhost/user-database-development';
+const connectDB = require('./database.js');
+const mongoURI = 
+  process.env.NODE_ENV === 'production'
+    ? 'mongodb://localhost/user-database-production'
+    : process.env.NODE_ENV === 'test'
+      ? 'mongodb://localhost/user-database-test'
+      : 'mongodb://localhost/user-database-development';
 
-//is this needed? are we still using the mock db?
-const MOCK_DB = path.join(__dirname, 'mock-db.json')
 
+connectDB(mongoURI);
+
+      
 app.use(cors());
-
-mongoose.connect(mongoURI);
-
-mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
-});
 
 
 
@@ -106,4 +107,11 @@ app.use('*', (req,res) => {
     res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
   });
   
-  app.listen(PORT, ()=>{ console.log(`Listening on port ${PORT}...`); });
+  if ( require.main === module ) {
+    app.listen(PORT, () => { 
+      console.log(`Listening on port ${PORT}...`); 
+    });
+  }
+
+
+  module.exports = { app, mongoURI };

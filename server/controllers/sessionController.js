@@ -14,11 +14,11 @@ const sessionController = {
 
       return next();
     } catch (err) {
-      return next({
-        log: 'Error occurred in sessionController. isLoggedIn.',
-        status: 500,
-        message: { err: 'An error occurred' },
-      });
+      console.error('Error varifying session: ', err);
+        return res.status(500).json({
+          log: 'error occurred in sessionController.isLoggedIn',
+          error: err,
+        });
     }
   },
 
@@ -33,10 +33,10 @@ const sessionController = {
       return next();
 
     } catch (err) {
-        return next({
-            log: 'error occured in sessionController.startSession',
-            message: { err: 'an error occured in sessionController.startSession Check server logs for more details.'},
-            status: 500,
+      console.error('Error starting session: ', err);
+      return res.status(500).json({
+        log: 'error occurred in sessionController.startSession',
+        error: err,
       });
     };
   },
@@ -49,27 +49,31 @@ const sessionController = {
       return next();
 
     } catch(err) {
-      return next({
-        log: 'error occured in sessionController.startSession',
-        message: { err: 'an error occured in sessionController.startSession Check server logs for more details.'},
-        status: 500,
-      });
+      console.error('Error ending session: ', err);
+        return res.status(500).json({
+          log: 'error occurred in sessionController.endSession',
+          error: err,
+        });
     };
   },
 
 
   async getAllSessions (req, res, next){
     try {
-      const sessions = Session.find({})
-      res.locals.sessions=sessions;
+      const sessions = await Session.find({});
+
+      if (!sessions) {
+        return res.status(404).json({ log: 'Sessions not found' });
+      }
+
+      res.locals.sessions = sessions;
       return next();
     } catch (err) {
-      return next({
-        log: 'error occurred in sessionController.getAllSessions',
-        message: {err: 'An error occurred while fetching sessions. Check server logs for more details.'},
-        status: 500,
-      });
-
+        console.error('Error fetching sessions: ', err);
+        return res.status(500).json({
+          log: 'error occurred in sessionController.getAllSessions',
+          error: err,
+        });
     }
   },
 };

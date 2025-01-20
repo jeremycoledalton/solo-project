@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const thoughtSchema = new mongoose.Schema(
-    //time created, text, author
+    //Only need to pass in username and message. others are set by default
 
     {
         message: {
@@ -10,7 +10,6 @@ const thoughtSchema = new mongoose.Schema(
         },
         username: {
             type: String,
-            default: 'null',
             required: true
         },
         createdAt: {
@@ -29,4 +28,4 @@ const thoughtSchema = new mongoose.Schema(
 
     const Thought = mongoose.model('Thought', thoughtSchema);
 
-    module.exports = { Thought };
+    module.exports = Thought;

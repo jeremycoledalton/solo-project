@@ -1,6 +1,7 @@
 const Thought = require('../models/thoughtModel.js');
 
 const thoughtController = {
+
     // Create a new thought
     createThought (req, res, next) {
       const { username, message } = req.body;
@@ -18,21 +19,11 @@ const thoughtController = {
       });
     },
   
-    // Get all thoughts
-    getAllThoughts (req, res, next) {
-      Thought.find({})
-      .then((thoughts) => {
-        res.locals.thoughts = thoughts;
-        return next();
-      }).catch((err) => {
-        res.status(500).json({ message: 'Error fetching thoughts' });
-      });
-    },
-  
+    
     // Delete a thought by ID
     deleteThought (req, res, next) {
       const { id } = req.params;
-  
+      
       Thought.findByIdAndDelete(id)
       .then((deletedThought) => {
         if (!deletedThought) {
@@ -47,7 +38,29 @@ const thoughtController = {
           log: 'Failed to delete thought from database'
         });
       });
-    }
-  };
+    },
+
+    // Get all thoughts
+   async getAllThoughts (req, res, next) {
+      try {
+        const thoughts = await Thought.find({});
+  
+        if (!thoughts) {
+          return res.status(404).json({ log: 'Thoughts not found' });
+        }
+        res.locals.thoughts = thoughts;
+        return next();
+      } catch (err) {
+        console.log('Error fetching thoughts', err);
+        return res.status(500).json({
+          log: 'error occured in the thoughtController.getAllThoughts',
+          error: err,
+        })
+  
+      };
+
+  }
+
+};
   
   module.exports = thoughtController;
