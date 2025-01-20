@@ -14,15 +14,23 @@ const Thought = require('./../server/models/thoughtModel.js');
 
 
 // Test Suite for MongoDB 
+
 describe('MongoDB Tests', () => {
     
-    before( async () => {
+    before(async () => {
+        process.env.NODE_ENV = 'test';
         await mongoose.connect(mongoURI);
-    });
+        await User.deleteMany();
+        await Session.deleteMany();
+        await Thought.deleteMany();
+      });
     
-    after(async () => {
+      after(async () => {
+        await User.deleteMany();
+        await Session.deleteMany();
+        await Thought.deleteMany();
         await mongoose.connection.close();
-    });
+      });
 
 
     describe ('Data Model Testing', () => {

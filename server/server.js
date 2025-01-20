@@ -112,6 +112,9 @@ app.use('*', (req,res) => {
       console.log(`Listening on port ${PORT}...`); 
     });
   }
+//console logs to check these items
+console.log ('Node Environment: ', process.env.NODE_ENV)
+console.log ('MongoURI: ', mongoURI)
 
 
   module.exports = { app, mongoURI };

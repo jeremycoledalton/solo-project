@@ -1,4 +1,4 @@
-const { User } = require ('../models/userModel');
+const  User  = require ('../models/userModel');
 const bcrypt = require('bcryptjs'); //required for varifyUser function to hash the password
 
 const userController = {
