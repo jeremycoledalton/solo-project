@@ -61,7 +61,7 @@ const AuthPage = ({ onAuthSuccess }) => {
     try {
       console.log('Submitting form data:', formData); 
 
-      const response = await fetch(`http://localhost:3000${formAction}`, {
+      const response = await fetch(`http://localhost:3000/auth${formAction}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

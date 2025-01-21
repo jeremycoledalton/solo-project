@@ -2,45 +2,57 @@ const Thought = require('../models/thoughtModel.js');
 
 const thoughtController = {
 
-    // Create a new thought
-    createThought (req, res, next) {
-      const { username, message } = req.body;
-  
-      const thought = new Thought({ username, message });
-      thought.save().then((thought) => {
+
+    async createThought (req, res, next) {
+      try {
+        const { username, message } = req.body;
+        
+        if ( !username || !message ) {
+          return res.status(400).json({ log: 'Username and message are required' })
+        }
+
+        const thought = await Thought.create ({ username, message });
+        console.log(`User ${thought.username} dropped the thought: ${thought.message}`)
         res.locals.thought = thought;
         return next();
-      }).catch((err) => {
+
+      } catch (err) {
         console.log('Error saving thought', err);
         res.status(400).json({
           err: err,
           log: 'Failed to save thought to database'
         });
-      });
+      }
     },
+
   
-    
-    // Delete a thought by ID
-    deleteThought (req, res, next) {
-      const { id } = req.params;
-      
-      Thought.findByIdAndDelete(id)
-      .then((deletedThought) => {
-        if (!deletedThought) {
-          return res.status(404).json({ message: 'Thought not found' });
-        }
-        res.locals.deletedThought = deletedThought;
+  
+    async deleteThought (req, res, next) {
+      try {
+        const { id } = req.params;
+
+        const result = await Thought.deleteOne({ id });
+        if (result.deletedCount === 0) {
+          console.log('No thought found');
+          return res.status(404).json({ log: 'Thought not found. Failed to delete.' });
+      }
+        console.log(`Thought with ID: ${id} deleted`);
         return next();
-      }).catch((err) => {
+      } catch (err) {
         console.log('Error deleting thought', err);
         res.status(500).json({
           err: err,
           log: 'Failed to delete thought from database'
         });
-      });
+
+      }
+
     },
 
-    // Get all thoughts
+
+
+
+
    async getAllThoughts (req, res, next) {
       try {
         const thoughts = await Thought.find({});

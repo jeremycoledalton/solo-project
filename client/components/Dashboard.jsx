@@ -12,7 +12,7 @@ const Dashboard = ({ user }) => {
     <div>
       <h1>So you agree, {user.username}? </h1>
       <ThoughtFeed />
-      <ThoughtForm />
+      <ThoughtForm user={user} />
       <p>Your role: {user.admin ? 'Admin' : 'User'}</p>
     </div>
   );

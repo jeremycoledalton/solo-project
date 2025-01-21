@@ -11,7 +11,7 @@ const userController = {
                 return res.status(400).json({ log: 'Username and Password are required' });
             }
 
-            const admin = false;
+            const admin = false;//remove this later. set admin as default false in model
             const user = await User.create ({username, password, admin});
             console.log(`User ${user.username} added`);
             res.locals.user = user;

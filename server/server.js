@@ -32,7 +32,7 @@ const mongoURI =
 connectDB(mongoURI);
 
       
-app.use(cors());
+app.use(cors()); //left open with no conditions; currently unsure of how this will effect other areas
 
 
 
@@ -54,32 +54,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
+const adminRouter = require('./routers/adminRouter.js');
+app.use('/admin', adminRouter); 
 
-app.get('/allUsers', userController.getAllUsers, (req, res) => {
-  console.log("Users: ", res.locals.users);
-  return res.status(200);
-});
+const authRouter = require('./routers/authRouter.js');
+app.use('/auth', authRouter);
 
-app.get('/allSessions', sessionController.getAllSessions, (req, res) => {
-  console.log("Sessions: ", res.locals.sessions);
-  return res.status(200);
-});
-
-app.get('/allThoughts', thoughtController.getAllThoughts, (req, res) => {
-  console.log("Thoughts: ", res.locals.thoughts);
-  return res.status(200);
-});
-
-
-app.post('/signup', userController.createUser, (req, res) => {
-  console.log("Signup was submitted");
-  res.status(200).json({ message: 'Signup successful', user: res.locals.savedUser });
-});
-
-app.post('/login', userController.verifyUser, sessionController.startSession, (req, res) => {
-  console.log ('You have sucessfully logged in');
-  return res.status(200).json({ log: 'User sucessfully logged in', user: res.locals.user });
-});
 
 app.post('/logout', sessionController.endSession, (req, res) => {
   return res.status(200).json({ message: 'User logged out successfully' });
@@ -112,9 +92,11 @@ app.use('*', (req,res) => {
       console.log(`Listening on port ${PORT}...`); 
     });
   }
-//console logs to check these items
-console.log ('Node Environment: ', process.env.NODE_ENV)
-console.log ('MongoURI: ', mongoURI)
+
+
+  //console logs to check these items
+  console.log ('Node Environment: ', process.env.NODE_ENV)
+  console.log ('MongoURI: ', mongoURI)
 
 
   module.exports = { app, mongoURI };

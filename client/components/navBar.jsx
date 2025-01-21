@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../AppContext.jsx';
 
-const NavBar = ({user, onLogout}) => (
-  <nav>
-    {user ? ( <>
-                <p>{user.username}, you're like... really pretty!</p>
-                <Link to="/">Home</Link> 
-                <Link to="/dashboard">Dashboard</Link>
-                <button onClick={onLogout}>Log Out</button>
+const NavBar = () => {
+  const { user, handleLogout } = useContext(AppContext);
+
+
+  return(
+    <nav>
+      {user ? ( <>
+                  <h2>{user.username}, you're like... really pretty!</h2>
+                  <Link to="/">Home</Link> 
+                  <Link to="/dashboard">Dashboard</Link>
+                  <button onClick={handleLogout}>Log Out</button>
+                </>
+          ) : ( <>
+                  <h2>Are you new here?</h2>
+                  <Link to="/">Home</Link> 
+                  <Link to="/auth/login">Log In</Link> 
+                  <Link to="/auth/signup">Sign Up</Link> 
               </>
-        ) : ( <>
-                <p>Are you new here?</p>
-                <Link to="/">Home</Link> 
-                <Link to="/auth/login">Log In</Link> 
-                <Link to="/auth/signup">Sign Up</Link> 
-            </>
-            )}
-  </nav>
-);
+              )}
+    </nav>
+  );
+}
+
+
 
 export default NavBar;

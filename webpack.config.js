@@ -32,20 +32,24 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin({
       title: 'Development',
-      template: '/index.html',
-    })],
-    devServer: {
-      static: {
-        publicPath: '/build',
-        directory: path.join(__dirname, 'client'),
+      template: './index.html',
+    }),
+  ],
+  devServer: {
+    static: {
+      publicPath: '/',
+      directory: path.join(__dirname, 'client'),
+    },
+    port: 8080,
+    proxy: [
+      {
+        context: ['/api', '/admin'],
+        target: 'http://localhost:3000',
+        logLevel: 'debug',
       },
-      port: 8080,
-      proxy: [
-        {
-          context: ['/'],
-          target: 'http://localhost:3000',
-        },
-      ],
+    ],
+    hot: true,
+    historyApiFallback: true,
   },
   devtool: 'eval-source-map',
 }
